@@ -1,0 +1,250 @@
+#include <iostream>
+#include <fstream>
+#include <string>
+#include <vector>
+
+using namespace std;
+string getdata();
+
+vector<int>   GRID(string, int*);
+double DICON(string, int*);
+double DJCON(string, int*);
+vector<double> DKVAR(string, int*);
+double PORCON(string, int*);
+vector< vector< vector< double > > > PERMIVAR(string, int*,int,int,int);
+vector< vector< vector< double > > > PERMJVAR(string, int*, int, int, int);
+vector< vector< vector< double > > > PERMKVAR(string, int*, int, int, int);
+
+
+void main()
+{
+	string data = getdata();
+	//cout << data;
+	int i = 0;
+	vector<int> grid=  GRID(data, &i);
+	double        di= DICON(data, &i);
+	double        dj= DJCON(data, &i);
+	vector<double> ab = DKVAR(data, &i);
+	double pk = PORCON(data, &i);
+	vector<vector<vector<double> > > pi=  PERMIVAR(data, &i, grid[0], grid[1], grid[2]);
+	vector<vector<vector<double> > > pj = PERMJVAR(data, &i, grid[0], grid[1], grid[2]);
+	vector<vector<vector<double> > > pkk = PERMKVAR(data, &i, grid[0], grid[1], grid[2]);
+
+	for (int c = 0; c < grid[2]; c++)
+	{
+		for (int b = 0; b < grid[1]; b++)
+		{
+			for (int a= 0; a < grid[0]; a++)
+			{
+				cout << pi[a][b][c];
+				cout << "-"; 
+				cout << pj[a][b][c];
+				cout << "-"; 
+				cout << pkk[a][b][c];
+				cout << "\n";
+			}
+			cout << "\n";
+		}
+		cout << "\n";
+	}
+}
+
+string getdata()
+{
+	ifstream file("Data.txt");
+	string str, str2;
+	while (getline(file, str))
+	{
+		str2 = str2 + str + "\n";
+	}
+	return str2;
+}
+
+vector< int >  GRID(string data, int* i)
+{
+	string  temp="";
+	vector<int>  g(3);
+	*i = data.find(" ")+1;
+	int k = 0;
+	while (true)
+	{
+		
+		if (data[*i] == ' ' || data[*i] == '\n')
+		{
+			g[k] = stod(temp);
+			if (data[*i] == '\n')
+				break;
+			temp = "";
+			k++;
+			(*i)++;
+
+		}
+		temp = temp + data[*i];
+		(*i)++;
+	}
+
+	return g;
+}
+
+
+double DICON(string data, int *i)
+{
+	*i=(*i)+7;
+	string t="";
+	while (true)
+	{
+		if (data[*i] == '\n')
+			break;
+
+		t = t + data[ *i ];
+		(*i)++;
+
+	}
+
+	double f = stod(t);
+	return f;
+}
+
+double DJCON(string data, int *i)
+{
+	*i = (*i) + 7;
+	string t = "";
+	while (true)
+	{
+		if (data[*i] == '\n')
+			break;
+
+		t = t + data[*i];
+		(*i)++;
+
+	}
+
+	double f = stod(t);
+	return f;
+}
+
+vector< double >  DKVAR(string data, int* i)
+{
+	string  temp = "";
+	vector<double>  g(3);
+	*i = (*i) + 8;
+	int k = 0;
+	while (true)
+	{
+
+		if (data[*i] == ' ' || data[*i] == '\n')
+		{
+			g[k] = stod(temp);
+			if (data[*i] == '\n')
+				break;
+			temp = "";
+			k++;
+			(*i)++;
+
+		}
+		temp = temp + data[*i];
+		(*i)++;
+	}
+
+	return g;
+}
+
+double PORCON(string data, int *i)
+{
+	*i = (*i) + 8;
+	string t = "";
+	while (true)
+	{
+		if (data[*i] == '\n')
+			break;
+
+		t = t + data[*i];
+		(*i)++;
+
+	}
+
+	double f = stod(t);
+	return f;
+}
+
+vector< vector< vector< double > > > PERMIVAR(string data, int*i,int nx,int ny,int nz)
+{
+	(*i) = (*i) + 12;
+	vector<vector<vector<double> > > permi(nx, vector<vector<double> >(ny, vector <double>(nz)));
+
+		for (int c=0;c<nz; c++)
+		{
+			for (int b=0;b<ny; b++)
+			{
+				for (int a=0;a<nx; a++)
+				{
+					string temp="";
+					while (data[*i] != ' '&&data[*i] != '\n')
+					{
+						temp = temp + data[*i];
+						(*i)++;
+					}
+					permi[a][b][c] = stod(temp);
+					(*i)++;
+
+				}
+			}
+			(*i)++;
+		}
+
+	return permi;
+}
+vector< vector< vector< double > > > PERMJVAR(string data, int*i, int nx, int ny, int nz)
+{
+	(*i) = (*i) + 10;
+	vector<vector<vector<double> > > permj(nx, vector<vector<double> >(ny, vector <double>(nz)));
+
+	for (int c = 0; c<nz; c++)
+	{
+		for (int b = 0; b<ny; b++)
+		{
+			for (int a = 0; a<nx; a++)
+			{
+				string temp = "";
+				while (data[*i] != ' '&&data[*i] != '\n')
+				{
+					temp = temp + data[*i];
+					(*i)++;
+				}
+				permj[a][b][c] = stod(temp);
+				(*i)++;
+
+			}
+		}
+		(*i)++;
+	}
+
+	return permj;
+}
+vector< vector< vector< double > > > PERMKVAR(string data, int*i, int nx, int ny, int nz)
+{
+	(*i) = (*i) + 10;
+	vector<vector<vector<double> > > permk(nx, vector<vector<double> >(ny, vector <double>(nz)));
+
+	for (int c = 0; c<nz; c++)
+	{
+		for (int b = 0; b<ny; b++)
+		{
+			for (int a = 0; a<nx; a++)
+			{
+				string temp = "";
+				while (data[*i] != ' '&&data[*i] != '\n')
+				{
+					temp = temp + data[*i];
+					(*i)++;
+				}
+				permk[a][b][c] = stod(temp);
+				(*i)++;
+
+			}
+		}
+		(*i)++;
+	}
+
+	return permk;
+}
